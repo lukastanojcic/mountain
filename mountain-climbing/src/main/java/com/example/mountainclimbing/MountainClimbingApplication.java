@@ -12,6 +12,4 @@ public class MountainClimbingApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MountainClimbingApplication.class, args);
 	}
-
-
 }

@@ -4,6 +4,9 @@ import com.example.mountainclimbing.MountainClimbingApplication;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import lombok.Setter;
+
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.ClassicConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -22,9 +25,9 @@ public class DbCustomConfiguration {
 		return DataSourceBuilder
 				.create()
 				.driverClassName(mySqlConfig.getDriverClassName())
-				.password(mySqlConfig.getPassword())
+				.url(mySqlConfig.url)
 				.username(mySqlConfig.getUsername())
-				.url(mySqlConfig.getUrl())
+				.password(mySqlConfig.getPassword())
 				.build();
 	}
 
@@ -37,18 +40,23 @@ public class DbCustomConfiguration {
 	@ConfigurationProperties(prefix="mysql")
 	@Getter @Setter
 	public static class ConfigProperties {
-
+		
+		/**
+		 * Name of the database driver
+		 */
 		private String driverClassName;
-		private String password;
+		/**
+		 * URL for database
+		 */
+		private String url;//URL for database
+		/**
+		 * Username for the connection to database
+		 */
 		private String username;
-		private String url;
-
-		public String getDriverClassName() {
-			return driverClassName;
-		}
-		public void setDriverClassName(String driverClassName) {
-			this.driverClassName=driverClassName;
-		}
+		/**
+		 * Password for the connection to database
+		 */
+		private String password;
 
 	}
 
