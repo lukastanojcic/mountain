@@ -20,6 +20,8 @@ public class Image {
 	private String name;
 	private int size;
 	private String contentType;
+	
+	
 	private LocalDateTime insertDate;
 	private int albumId;
 
