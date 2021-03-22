@@ -1,13 +1,7 @@
 package com.example.mountainclimbing.controller;
-
-import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,27 +24,24 @@ public class ImageController {
 	}
 	
 	@PostMapping
-	public  ResponseEntity<Image> createImage(@Valid @RequestBody Image image, HttpServletRequest  req, HttpServletResponse res) {
-		return imageService.createImage(image,req,res);
+	public  ResponseEntity<Image> createImage(@Valid @RequestBody Image image,BindingResult result) {
+		return imageService.createImage(image,result);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Image> readImage(@PathVariable(value="id") int id, HttpServletRequest  req, HttpServletResponse res) {
-		Optional<Image> opt = imageService.readImage(id,req,res);
-		if(opt.isPresent()) {
-			return new ResponseEntity<Image>(opt.get(),HttpStatus.OK);
-		}
-		return new ResponseEntity<Image>(opt.get(),HttpStatus.NOT_FOUND);
+	public ResponseEntity<Image> readImage(@PathVariable(value="id") int id) {
+		return imageService.readImage(id);
+		
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Image> updateImage(@PathVariable(value="id") int id,@Valid @RequestBody Image image, HttpServletRequest  req, HttpServletResponse res){
-		return imageService.updateImage(id, image,req,res);
+	public ResponseEntity<Image> updateImage(@PathVariable(value="id") int id,@Valid @RequestBody Image image,BindingResult result){
+		return imageService.updateImage(id, image,result);
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteImage(@PathVariable(value="id") int id, HttpServletRequest  req, HttpServletResponse res) {
-		return imageService.deleteImage(id,req,res);
+	public ResponseEntity<Void> deleteImage(@PathVariable(value="id") int id) {
+		return imageService.deleteImage(id);
 	}
 
 }

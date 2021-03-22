@@ -1,11 +1,9 @@
 package com.example.mountainclimbing.service;
 import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.mountainclimbing.model.Image;
 import com.example.mountainclimbing.repository.ImageRepository;
@@ -20,17 +18,27 @@ public class ImageService {
 		this.imageRepository = imageRepository;
 	}
 
-	public ResponseEntity<Image> createImage(Image image, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<Image> createImage(Image image,BindingResult result) {
+		if(result.hasErrors()) {
+			return new ResponseEntity<Image>(HttpStatus.BAD_REQUEST);
+		}
 		imageRepository.save(image);
-		return new ResponseEntity<Image>(image,HttpStatus.OK);
+		return new ResponseEntity<Image>(image,HttpStatus.CREATED);
 	}
 	
-	public Optional<Image> readImage(int id, HttpServletRequest req, HttpServletResponse res) {
-		return imageRepository.findById(id);
+	public ResponseEntity<Image> readImage(int id) {
+		Optional<Image> opt =  imageRepository.findById(id);
+		if(opt.isPresent()) {
+			return new ResponseEntity<Image>(opt.get(),HttpStatus.OK);
+		}
+		return new ResponseEntity<Image>(opt.get(),HttpStatus.NOT_FOUND);
 	}
 	
 	
-	public ResponseEntity<Image> updateImage(int id,Image image, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<Image> updateImage(int id,Image image,BindingResult result) {
+		if(result.hasErrors()) {
+			return new ResponseEntity<Image>(HttpStatus.BAD_REQUEST);
+		}
 		if(imageRepository.existsById(id)) {
 			imageRepository.save(image);
 			return new ResponseEntity<Image>(image,HttpStatus.OK);
@@ -40,7 +48,7 @@ public class ImageService {
 	}
 	
 	
-	public ResponseEntity<Void> deleteImage(@RequestParam int id, HttpServletRequest req, HttpServletResponse res) {
+	public ResponseEntity<Void> deleteImage(@RequestParam int id) {
 		if(imageRepository.existsById(id)) {
 		imageRepository.deleteById(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
