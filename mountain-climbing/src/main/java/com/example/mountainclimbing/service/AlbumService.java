@@ -18,8 +18,8 @@ public class AlbumService {
 		this.albumRepository = albumRepository;
 	}
 
-	public Album createAlbum(Album album) {
-		return albumRepository.save(album);
+	public Optional<Album> createAlbum(Album album) {
+		return Optional.of(albumRepository.save(album));
 	}
 
 	public Optional<Album> readAlbum(int id) {
@@ -34,9 +34,9 @@ public class AlbumService {
 		return false;
 	}
 
-	public Album updateAlbum(int id, @Valid Album album) {
+	public Optional<Album> updateAlbum(int id, @Valid Album album) {
 		if(albumRepository.existsById(id)) {
-			return albumRepository.save(album);
+			return Optional.of(albumRepository.save(album));
 		}
 		return null;
 	}

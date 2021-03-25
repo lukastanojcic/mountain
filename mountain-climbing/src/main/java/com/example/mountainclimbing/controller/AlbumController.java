@@ -33,17 +33,23 @@ public class AlbumController {
 		if(result.hasErrors()) {
 			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
 		}
-		albumService.createAlbum(album);
-		return new ResponseEntity<Album>(album,HttpStatus.CREATED);
+		Optional<Album> opt = albumService.createAlbum(album);
+		if(opt.isPresent()) {
+			return new ResponseEntity<Album>(album,HttpStatus.CREATED);
+		}
+		return new ResponseEntity<Album>(opt.get(),HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Album> readAlbum(@PathVariable(value="id") int id, BindingResult result) {
+		if(result.hasErrors()) {
+			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
+		}
 		Optional<Album> opt =  albumService.readAlbum(id);
 		if(opt.isPresent()) {
 			return new ResponseEntity<Album>(opt.get(),HttpStatus.OK);
 		}
-		return new ResponseEntity<Album>(opt.get(),HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Album>(opt.get(),HttpStatus.NO_CONTENT);
 	}
 	
 	@PutMapping("/{id}")
@@ -51,11 +57,11 @@ public class AlbumController {
 		if(result.hasErrors()) {
 			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
 		}
-		Album al = albumService.updateAlbum(id, album);
-		if(al != null) {
+		Optional<Album> opt = albumService.updateAlbum(id, album);
+		if(opt.isPresent()) {
 			return new ResponseEntity<Album>(album,HttpStatus.OK);
 		}
-		return new ResponseEntity<Album>(album,HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Album>(album,HttpStatus.NO_CONTENT);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -67,7 +73,7 @@ public class AlbumController {
 		if(success) {
 			return new ResponseEntity<Void>(HttpStatus.OK);
 		}
-		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
 	}
 	
 }

@@ -46,26 +46,6 @@ public class AlbumTest {
 		setImages.add(image1);
 		setImages.add(image2);
 		
-		/*Album album = new Album(null, "album1", "Album 1", LocalDateTime.now(), 1, setImages);
-		
-		Album data = this.albumService.createAlbum(album);
-		assertNotNull(data, "Data is not added in database");*/
-		
-		/*Optional<Album> opt = albumService.readAlbum(16);
-		Album album1 = opt.get();
-		System.out.println("ALBUM: " + album1.getName());*/
-		
-		/*Album album2 = new Album(16, "album2", "Album 2", LocalDateTime.now(), 1, setImages);
-		
-		Album album3 = albumService.updateAlbum(16, album2);
-		System.out.println("UPDATE-OVANI ALBUM: " + album3.getName());*/
-		
-		boolean znak = albumService.deleteAlbum(17);
-		if(znak) {
-			System.out.println("USPESNO BRISANJE");
-		}else {
-			System.out.println("NEUSPESNO BRISANJE");
-		}
 	}
 	
 	
