@@ -8,18 +8,16 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Table(value = "images")
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class Image {
 
 	@Id
 	@NotNull
-	private int id;
+	private Integer id;
 	private String name;
 	private int size;
 	@NotNull

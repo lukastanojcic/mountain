@@ -1,0 +1,44 @@
+package com.example.mountainclimbing.service;
+
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.springframework.stereotype.Service;
+
+import com.example.mountainclimbing.model.Album;
+import com.example.mountainclimbing.repository.AlbumRepository;
+
+@Service
+public class AlbumService {
+
+	private final AlbumRepository albumRepository;
+	
+	public AlbumService(AlbumRepository albumRepository) {
+		this.albumRepository = albumRepository;
+	}
+
+	public Album createAlbum(Album album) {
+		return albumRepository.save(album);
+	}
+
+	public Optional<Album> readAlbum(int id) {
+		return albumRepository.findById(id);
+	}
+
+	public boolean deleteAlbum(int id) {
+		if(albumRepository.existsById(id)) {
+			albumRepository.deleteById(id);
+			return true;
+		}
+		return false;
+	}
+
+	public Album updateAlbum(int id, @Valid Album album) {
+		if(albumRepository.existsById(id)) {
+			return albumRepository.save(album);
+		}
+		return null;
+	}
+
+}
