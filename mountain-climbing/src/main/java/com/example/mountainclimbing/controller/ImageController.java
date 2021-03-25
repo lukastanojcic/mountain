@@ -1,4 +1,5 @@
 package com.example.mountainclimbing.controller;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.mountainclimbing.model.Image;
 import com.example.mountainclimbing.service.ImageService;
 
@@ -27,14 +31,11 @@ public class ImageController {
 		this.imageService = imageService;
 	}
 	
-	@PostMapping
-	public  ResponseEntity<Image> createImage(@Valid @RequestBody Image image,BindingResult result) {
-		Image data = imageService.createImage(image);
-		if(result.hasErrors()) {
-			return new ResponseEntity<Image>(HttpStatus.BAD_REQUEST);
-		}
+	@PostMapping("/{albumId}")
+	public  ResponseEntity<Image> createImage(@PathVariable Integer albumId, @RequestParam("files") MultipartFile multipartFile) {		
+		Image data = imageService.createImage(albumId, multipartFile);
 		if(data != null) {
-			return new ResponseEntity<Image>(image,HttpStatus.CREATED);	
+			return new ResponseEntity<Image>(data,HttpStatus.CREATED);	
 		}
 		else {
 			return new ResponseEntity<Image>(HttpStatus.NO_CONTENT );
@@ -42,12 +43,12 @@ public class ImageController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Image> readImage(@PathVariable Integer id) {
-		Optional<Image> opt= imageService.readImage(id);
-		if(opt.isPresent()) {
-			return new ResponseEntity<Image>(opt.get(),HttpStatus.OK);
+	public ResponseEntity<Map<String, Object>> readImage(@PathVariable Integer id) {
+		Map<String,Object> data = imageService.readImage(id);
+		if(!data.isEmpty()) {
+			return new ResponseEntity<Map<String,Object>>(data, HttpStatus.OK);
 		}
-		return new ResponseEntity<Image>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<Map<String, Object>>(HttpStatus.NOT_FOUND);
 		
 	}
 	

@@ -2,11 +2,10 @@ package com.example.mountainclimbing.model;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +15,16 @@ import lombok.Setter;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class Image {
 
 	@Id
-	@NotNull
-	private int id;
+	private Integer id;
 	private String name;
-	private int size;
-	@NotNull
+	private Long size;
 	private String contentType;
-	@NotNull
 	private LocalDateTime insertDate;
-	private int albumId;
+	private Integer albumId;
 
 }
