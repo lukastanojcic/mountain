@@ -3,6 +3,7 @@ package com.example.mountainclimbing.model;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,5 +27,7 @@ public class Image {
 	private String contentType;
 	private LocalDateTime insertDate;
 	private Integer albumId;
+	@Transient
+	private byte [] bufferArray;
 
 }

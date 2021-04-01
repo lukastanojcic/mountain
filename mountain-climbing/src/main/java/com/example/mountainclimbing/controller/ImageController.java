@@ -1,4 +1,5 @@
 package com.example.mountainclimbing.controller;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -29,6 +30,21 @@ public class ImageController {
 	
 	public ImageController(ImageService imageService) {
 		this.imageService = imageService;
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<Image>> findAll (){
+		final List<Image> DATA = this.imageService.findAll();
+		if(DATA.size() > 0) {
+			return ResponseEntity
+					.status(HttpStatus.OK)
+					.body(DATA);
+		}
+		else {
+			return ResponseEntity
+					.status(HttpStatus.NOT_FOUND)
+					.build();
+		}
 	}
 	
 	@PostMapping("/{albumId}")
