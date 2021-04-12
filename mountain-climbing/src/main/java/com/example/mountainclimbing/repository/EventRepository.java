@@ -2,9 +2,9 @@ package com.example.mountainclimbing.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import com.example.mountainclimbing.model.Image;
+import com.example.mountainclimbing.model.Event;
 
 @Repository 
-public interface ImageRepository extends CrudRepository<Image, Integer> {
+public interface EventRepository extends CrudRepository<Event, Integer> {
 
 }
