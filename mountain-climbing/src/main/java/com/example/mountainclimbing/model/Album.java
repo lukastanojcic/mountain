@@ -1,33 +1,36 @@
 package com.example.mountainclimbing.model;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Table(value = "images")
+@Table(value = "albums")
 @Getter
 @Setter
 @RequiredArgsConstructor
-@EqualsAndHashCode
-public class Image {
+@AllArgsConstructor
+public class Album {
 
 	@Id
 	@NotNull
 	private Integer id;
 	private String name;
-	private int size;
+	private String description;
 	@NotNull
-	private String contentType;
-	@NotNull
-	private LocalDateTime insertDate;
-	private int albumId;
-
+	private LocalDateTime creationDate;
+	private Integer coverId;
+	
+	@MappedCollection(keyColumn = "albumId", idColumn = "id")
+	private Set<Image> images;
+	
 }
