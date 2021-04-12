@@ -1,11 +1,9 @@
 package com.example.mountainclimbing.controller;
 
 import java.util.Optional;
-
-import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.mountainclimbing.model.User;
 import com.example.mountainclimbing.service.UserService;
 
@@ -25,15 +22,19 @@ public class UserController {
 	
 	private final UserService userService;
 	
-	public UserController(UserService userService) {
+	private final PasswordEncoder passwordEncoder;
+	
+	public UserController(UserService userService, PasswordEncoder passwordEncoder) {
 		this.userService = userService;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> createUser(@Valid @RequestBody User user, BindingResult result){
+	public ResponseEntity<User> createUser(@RequestBody User user, BindingResult result){
 		if(result.hasErrors()){
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Optional<User> opt = userService.createUser(user);
 		if(opt.isPresent()) {
 			return new ResponseEntity<User>(user, HttpStatus.CREATED);
@@ -42,10 +43,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/getUser/{id}")
-	public ResponseEntity<User> readUser(@PathVariable(value="id") int id, BindingResult result) {
-		if(result.hasErrors()) {
-			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<User> readUser(@PathVariable(value="id") int id) {
 		Optional<User> opt =  userService.readUser(id);
 		if(opt.isPresent()) {
 			return new ResponseEntity<User>(opt.get(),HttpStatus.OK);
@@ -54,10 +52,11 @@ public class UserController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable(value="id") int id,@Valid @RequestBody User user, BindingResult result){
+	public ResponseEntity<User> updateUser(@PathVariable(value="id") int id,@RequestBody User user, BindingResult result){
 		if(result.hasErrors()) {
 			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
 		}
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Optional<User> opt = userService.updateUser(id, user);
 		if(opt.isPresent()) {
 			return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
@@ -78,10 +77,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/getAllUsers")
-	public ResponseEntity<Iterable<User>> readAllUsers(BindingResult result) {
-		if(result.hasErrors()) {
-			return new ResponseEntity<Iterable<User>>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Iterable<User>> readAllUsers() {
 		Optional<Iterable<User>> opt =  userService.readAllUsers();
 		if(opt.isPresent()) {
 			return new ResponseEntity<Iterable<User>>(opt.get(),HttpStatus.OK);

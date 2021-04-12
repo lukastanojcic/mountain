@@ -1,17 +1,25 @@
 package com.example.mountainclimbing.security;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements PasswordEncoder{
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.
-			authorizeRequests()
-				.antMatchers().permitAll()
+		http
+			.csrf().disable()
+			.authorizeRequests()
+			.antMatchers(HttpMethod.POST, "/user").permitAll()
+			.antMatchers(HttpMethod.GET, "/user/getAllUsers").permitAll()
+			.antMatchers(HttpMethod.GET, "/user/getUser/2").permitAll()
+			.antMatchers(HttpMethod.POST, "/email").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
@@ -20,16 +28,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements P
 			.logout();
 				
 	}
-
-	@Override
-	public String encode(CharSequence rawPassword) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	@Bean
+	public PasswordEncoder passwordEncoder () {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
-	@Override
-	public boolean matches(CharSequence rawPassword, String encodedPassword) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

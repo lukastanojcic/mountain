@@ -26,11 +26,11 @@ public class User implements UserDetails {
 	private String username;
 	private String password;
 	private String name;
-	private String lastname;
+	private String surname;
 	private String email;
 	private String city;
 	private String address;
-	private String pictureurl;
+	private String pictureUrl;
 	private Integer gender;
 	private String birthdate;
 	private Integer postalCode;
@@ -54,17 +54,17 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return false;
+		return true;
 	}
 
 	@Override
