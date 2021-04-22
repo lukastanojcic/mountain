@@ -1,6 +1,22 @@
 package com.example.mountainclimbing.service;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.mountainclimbing.model.Image;
 import com.example.mountainclimbing.repository.ImageRepository;
 
@@ -8,21 +24,71 @@ import com.example.mountainclimbing.repository.ImageRepository;
 @Service
 public class ImageService {
 	
+	private static final String BASE_URI = "C:/sviluppo/spool/saluber/test1/";
+	
 	private final ImageRepository imageRepository;
 	
 	public ImageService(ImageRepository imageRepository) {
 		this.imageRepository = imageRepository;
 	}
 
-	public Image createImage(Image image) {
+	public Image createImage(Integer albumId, MultipartFile multipartFile) {
+		final Image image = new Image(null, multipartFile.getOriginalFilename(), multipartFile.getSize(), multipartFile.getContentType(), LocalDateTime.now(), albumId, null);
+		try(BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(Files.newOutputStream(Paths.get(BASE_URI + multipartFile.getOriginalFilename())))){
+			bufferedOutputStream.write(multipartFile.getBytes());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			//handle exception and return something else
+			// TODO: handle exception
+		}
 		return 	imageRepository.save(image);
 	}
 	
-	public Optional<Image> readImage(Integer id) {
-		return  imageRepository.findById(id);
+	public Map<String, Object> readImage(Integer id) {
+		final Map<String, Object> map = new HashMap<>();
+		Optional<Image> optional = imageRepository.findById(id);
+		optional.ifPresent(item-> {
+			try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(Paths.get(BASE_URI + item.getName())))){
+				byte [] data = new byte[1024];
+				bufferedInputStream.read(data);
+				map.put("value", data);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		return map;
 	}
 	
+	private byte [] getImageBytes (String name) {
+		byte [] data = new byte[1024];
+		try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(Paths.get(BASE_URI + name)))){
+			bufferedInputStream.read(data);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return data;
+	}
 	
+	public List<Image> findAll () {
+		final List<Image> LIST_IMAGES = StreamSupport.stream(this.imageRepository.findAll().spliterator(), false)
+			.map(new Function<Image, Image>() {
+
+				@Override
+				public Image apply(Image value) {
+					// TODO Auto-generated method stub
+					byte [] bufferArray = getImageBytes(value.getName());
+					value.setBufferArray(bufferArray);
+					return value;
+				}
+			})
+			.collect(Collectors.toList());
+		return LIST_IMAGES;
+	}
+	
+	//rewrite update image method
 	public Optional<Image> updateImage(Integer id,Image image) {
 		if(imageRepository.existsById(id)) {
 			return Optional.ofNullable(imageRepository.save(image));
