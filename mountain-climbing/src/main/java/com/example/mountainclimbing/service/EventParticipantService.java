@@ -40,4 +40,8 @@ public class EventParticipantService {
 		}
 		return false;
 	}
+	
+	public Integer countEventParticipant(Integer id) {
+		return eventParticipantRepository.countByEventId(id);
+	}
 }

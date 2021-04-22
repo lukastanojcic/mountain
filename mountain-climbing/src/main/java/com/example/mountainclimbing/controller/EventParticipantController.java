@@ -29,7 +29,7 @@ public class EventParticipantController {
 	}
 	
 	@PostMapping
-	public  ResponseEntity<EventParticipant> createEvent(@Valid @RequestBody EventParticipant eventParticipant,BindingResult result) {
+	public  ResponseEntity<EventParticipant> createEventParticipant(@Valid @RequestBody EventParticipant eventParticipant,BindingResult result) {
 		EventParticipant data = eventParticipantService.createEventParticipant(eventParticipant);
 		if(result.hasErrors()) {
 			return new ResponseEntity<EventParticipant>(HttpStatus.BAD_REQUEST);
@@ -73,6 +73,10 @@ public class EventParticipantController {
 		}
 		return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 			
+	}
+	@GetMapping("/count/{id}")
+	public Integer countEventParticipant(@PathVariable Integer id) {
+		return eventParticipantService.countEventParticipant(id);
 	}
 
 

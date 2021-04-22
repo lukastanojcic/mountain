@@ -8,4 +8,6 @@ import com.example.mountainclimbing.model.EventParticipant;
 @Repository 
 public interface EventParticipantRepository extends CrudRepository<EventParticipant, Integer> {
 
+	Integer countByEventId(Integer id);
+
 }

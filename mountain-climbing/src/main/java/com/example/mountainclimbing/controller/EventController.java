@@ -30,6 +30,8 @@ private final EventService eventService;
 		this.eventService = eventService;
 	}
 	
+	
+	
 	@PostMapping
 	public  ResponseEntity<Event> createEvent(@Valid @RequestBody Event event,BindingResult result) {
 		Event data = eventService.createEvent(event);
