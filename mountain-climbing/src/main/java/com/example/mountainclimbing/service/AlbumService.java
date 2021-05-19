@@ -36,7 +36,8 @@ public class AlbumService {
 
 	public Optional<Album> updateAlbum(int id, @Valid Album album) {
 		if(albumRepository.existsById(id)) {
-			return Optional.of(albumRepository.save(album));
+			Album update = albumRepository.findById(id).get();
+			return Optional.of(albumRepository.save(update));
 		}
 		return null;
 	}

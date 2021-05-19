@@ -41,10 +41,7 @@ public class AlbumController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Album> readAlbum(@PathVariable(value="id") int id, BindingResult result) {
-		if(result.hasErrors()) {
-			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Album> readAlbum(@PathVariable(value="id") int id) {
 		Optional<Album> opt =  albumService.readAlbum(id);
 		if(opt.isPresent()) {
 			return new ResponseEntity<Album>(opt.get(),HttpStatus.OK);
@@ -65,10 +62,7 @@ public class AlbumController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deleteAlbum(@PathVariable(value="id") int id, BindingResult result) {
-		if(result.hasErrors()) {
-			return new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Void> deleteAlbum(@PathVariable(value="id") int id) {
 		boolean success = albumService.deleteAlbum(id);
 		if(success) {
 			return new ResponseEntity<Void>(HttpStatus.OK);

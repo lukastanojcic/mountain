@@ -32,7 +32,7 @@ public class AlbumTest {
 		image1.setInsertDate(LocalDateTime.now());
 		image1.setContentType("type");
 		image1.setName("Image1");
-		image1.setSize(100);
+		image1.setSize(100L);
 		
 		Image image2 = new Image();
 		image2.setId(null);
@@ -40,7 +40,7 @@ public class AlbumTest {
 		image2.setInsertDate(LocalDateTime.now());
 		image2.setContentType("type");
 		image2.setName("Image2");
-		image2.setSize(100);
+		image2.setSize(100L);
 		
 		Set<Image> setImages = new HashSet<>();
 		setImages.add(image1);

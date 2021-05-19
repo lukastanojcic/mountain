@@ -14,7 +14,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Table(value = "albums")
+@Table(value = "album")
 @Getter
 @Setter
 @RequiredArgsConstructor
