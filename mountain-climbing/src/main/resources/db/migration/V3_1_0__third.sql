@@ -1,9 +1,9 @@
 
 
-DROP TABLE IF EXISTS images;
+DROP TABLE IF EXISTS image;
 DROP TABLE IF EXISTS album;
 
-CREATE TABLE IF NOT EXISTS `images` (
+CREATE TABLE IF NOT EXISTS `image` (
 
     `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `name` varchar(20),
@@ -21,4 +21,4 @@ CREATE TABLE IF NOT EXISTS `album` (
 
 )ENGINE=InnoDB DEFAULT CHARSET=UTF8;
 
-ALTER TABLE images ADD album_id int(11);
+ALTER TABLE image ADD album_id int(11);

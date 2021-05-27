@@ -9,6 +9,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+
+import com.example.mountainclimbing.mapper.MailMapper;
 import com.example.mountainclimbing.model.Mail;
 
 @Service
@@ -16,6 +18,12 @@ public class EmailService {
 
 	@Autowired
 	private JavaMailSender emailSender;
+	private MailMapper mailMapper;
+	
+	public EmailService(MailMapper mailMapper) {
+		this.mailMapper = mailMapper;
+	}
+	
 	
 	public void sendEmail(Mail mail) {
 		SimpleMailMessage msg = new SimpleMailMessage();
