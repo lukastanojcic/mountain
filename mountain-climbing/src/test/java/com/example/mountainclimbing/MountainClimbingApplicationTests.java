@@ -9,24 +9,23 @@ import org.springframework.util.Assert;
 import javax.sql.DataSource;
 
 @SpringBootTest
-@ActiveProfiles("test-db")
 class MountainClimbingApplicationTests {
 
-	@Autowired
-	private DataSource dataSource;
-
-	/*@BeforeAll
-	public void init (DataSource dataSource) {
-		this.dataSource = dataSource;
-	}*/
-
-	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	public void test (){
-		Assert.notNull(this.dataSource, "This object is null");
-	}
+//	@Autowired
+//	private DataSource dataSource;
+//
+//	/*@BeforeAll
+//	public void init (DataSource dataSource) {
+//		this.dataSource = dataSource;
+//	}*/
+//
+//	@Test
+//	void contextLoads() {
+//	}
+//
+//	@Test
+//	public void test (){
+//		Assert.notNull(this.dataSource, "This object is null");
+//	}
 
 }

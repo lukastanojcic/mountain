@@ -6,6 +6,8 @@ import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
 
+import com.example.mountainclimbing.dto.AlbumDto;
+import com.example.mountainclimbing.mapper.AlbumMapper;
 import com.example.mountainclimbing.model.Album;
 import com.example.mountainclimbing.repository.AlbumRepository;
 
@@ -13,13 +15,16 @@ import com.example.mountainclimbing.repository.AlbumRepository;
 public class AlbumService {
 
 	private final AlbumRepository albumRepository;
+	private final AlbumMapper albumMapper;
 	
-	public AlbumService(AlbumRepository albumRepository) {
+	public AlbumService(AlbumRepository albumRepository, AlbumMapper albumMapper) {
 		this.albumRepository = albumRepository;
+		this.albumMapper = albumMapper;
 	}
 
-	public Optional<Album> createAlbum(Album album) {
-		return Optional.of(albumRepository.save(album));
+	public Optional<AlbumDto> createAlbum(Album album) {
+		final Optional<AlbumDto> aOptional = Optional.of(this.albumMapper.entityToDto(this.albumRepository.save(album)));
+		return aOptional;
 	}
 
 	public Optional<Album> readAlbum(int id) {
