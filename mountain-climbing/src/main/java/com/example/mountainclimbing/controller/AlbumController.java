@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.mountainclimbing.dto.AlbumDto;
 import com.example.mountainclimbing.model.Album;
 import com.example.mountainclimbing.service.AlbumService;
 
@@ -29,15 +31,15 @@ public class AlbumController {
 	}	
 	
 	@PostMapping
-	public  ResponseEntity<Album> createAlbum(@Valid @RequestBody Album album, BindingResult result) {
+	public  ResponseEntity<AlbumDto> createAlbum(@Valid @RequestBody Album album, BindingResult result) {
 		if(result.hasErrors()) {
-			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<AlbumDto>(HttpStatus.BAD_REQUEST);
 		}
-		Optional<Album> opt = albumService.createAlbum(album);
+		Optional<AlbumDto> opt = albumService.createAlbum(album);
 		if(opt.isPresent()) {
-			return new ResponseEntity<Album>(album,HttpStatus.CREATED);
+			return new ResponseEntity<AlbumDto>(opt.get(),HttpStatus.CREATED);
 		}
-		return new ResponseEntity<Album>(opt.get(),HttpStatus.NO_CONTENT);
+		return new ResponseEntity<AlbumDto>(opt.get(),HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/{id}")
