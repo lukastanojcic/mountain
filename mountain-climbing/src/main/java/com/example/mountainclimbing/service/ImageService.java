@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class ImageService {
 		Optional<Image> optional = imageRepository.findById(id);
 		optional.ifPresent(item-> {
 			try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(Paths.get(BASE_URI + item.getName())))){
-				byte [] data = new byte[1024];
+				byte [] data = new byte[item.getSize().intValue()];
 				bufferedInputStream.read(data);
 				map.put("value", data);
 			} catch (IOException e) {
@@ -65,8 +66,8 @@ public class ImageService {
 		return map;
 	}
 	
-	private byte [] getImageBytes (String name) {
-		byte [] data = new byte[1024];
+	private byte [] getImageBytes (String name, Integer size) {
+		byte [] data = new byte[size];
 		try (BufferedInputStream bufferedInputStream = new BufferedInputStream(Files.newInputStream(Paths.get(BASE_URI + name)))){
 			bufferedInputStream.read(data);
 		} catch (IOException e) {
@@ -83,7 +84,7 @@ public class ImageService {
 				@Override
 				public ImageDto apply(Image value) {
 					// TODO Auto-generated method stub
-					byte [] bufferArray = getImageBytes(value.getName());
+					byte [] bufferArray = getImageBytes(value.getName(), value.getSize().intValue());
 					value.setBufferArray(bufferArray);
 					return imageMapper.entityToDto(value);
 				}

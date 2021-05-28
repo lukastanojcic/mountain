@@ -20,6 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 			.antMatchers(HttpMethod.GET, "/user/getAllUsers").permitAll()
 			.antMatchers(HttpMethod.GET, "/user/getUser/2").permitAll()
 			.antMatchers(HttpMethod.POST, "/email").permitAll()
+			.antMatchers( "/image/**").permitAll()
 			.antMatchers(HttpMethod.GET, "/image/three").permitAll()
 				.anyRequest().authenticated()
 				.and()
