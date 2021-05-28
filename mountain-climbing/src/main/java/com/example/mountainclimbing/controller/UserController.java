@@ -1,5 +1,6 @@
 package com.example.mountainclimbing.controller;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.mountainclimbing.model.User;
+import com.example.mountainclimbing.dto.UserDto;
 import com.example.mountainclimbing.service.UserService;
 
 @RestController
@@ -30,38 +31,38 @@ public class UserController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<User> createUser(@RequestBody User user, BindingResult result){
+	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto, BindingResult result){
 		if(result.hasErrors()){
-			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UserDto>(HttpStatus.BAD_REQUEST);
 		}
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		Optional<User> opt = userService.createUser(user);
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		Optional<UserDto> opt = userService.createUser(userDto);
 		if(opt.isPresent()) {
-			return new ResponseEntity<User>(user, HttpStatus.CREATED);
+			return new ResponseEntity<UserDto>(userDto, HttpStatus.CREATED);
 		}
-		return new ResponseEntity<User>(opt.get(), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<UserDto>(opt.get(), HttpStatus.NO_CONTENT);
 	}
 	
 	@GetMapping("/getUser/{id}")
-	public ResponseEntity<User> readUser(@PathVariable(value="id") int id) {
-		Optional<User> opt =  userService.readUser(id);
+	public ResponseEntity<UserDto> readUser(@PathVariable(value="id") int id) {
+		Optional<UserDto> opt =  userService.readUser(id);
 		if(opt.isPresent()) {
-			return new ResponseEntity<User>(opt.get(),HttpStatus.OK);
+			return new ResponseEntity<UserDto>(opt.get(),HttpStatus.OK);
 		}
-		return new ResponseEntity<User>(opt.get(),HttpStatus.NO_CONTENT);
+		return new ResponseEntity<UserDto>(opt.get(),HttpStatus.NO_CONTENT);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<User> updateUser(@PathVariable(value="id") int id,@RequestBody User user, BindingResult result){
+	public ResponseEntity<UserDto> updateUser(@PathVariable(value="id") int id,@RequestBody UserDto userDto, BindingResult result){
 		if(result.hasErrors()) {
-			return new ResponseEntity<User>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<UserDto>(HttpStatus.BAD_REQUEST);
 		}
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		Optional<User> opt = userService.updateUser(id, user);
+		userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+		Optional<UserDto> opt = userService.updateUser(id, userDto);
 		if(opt.isPresent()) {
-			return new ResponseEntity<User>(opt.get(), HttpStatus.OK);
+			return new ResponseEntity<UserDto>(opt.get(), HttpStatus.OK);
 		}
-		return new ResponseEntity<User>(opt.get(), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<UserDto>(opt.get(), HttpStatus.NO_CONTENT);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -77,11 +78,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/getAllUsers")
-	public ResponseEntity<Iterable<User>> readAllUsers() {
-		Optional<Iterable<User>> opt =  userService.readAllUsers();
+	public ResponseEntity<Iterable<UserDto>> readAllUsers() {
+		Optional<List<UserDto>> opt =  userService.readAllUsers();
 		if(opt.isPresent()) {
-			return new ResponseEntity<Iterable<User>>(opt.get(),HttpStatus.OK);
+			return new ResponseEntity<Iterable<UserDto>>(opt.get(),HttpStatus.OK);
 		}
-		return new ResponseEntity<Iterable<User>>(opt.get(),HttpStatus.NO_CONTENT);
+		return new ResponseEntity<Iterable<UserDto>>(opt.get(),HttpStatus.NO_CONTENT);
 	}
 }

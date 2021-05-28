@@ -19,13 +19,14 @@ public class AlbumService {
 		this.albumMapper = albumMapper;
 	}
 
-	public Optional<AlbumDto> createAlbum(Album album) {
-		final Optional<AlbumDto> aOptional = Optional.of(this.albumMapper.entityToDto(this.albumRepository.save(album)));
-		return aOptional;
+	public Optional<AlbumDto> createAlbum(AlbumDto albumDto) {
+		Album album = albumMapper.dtoToEntity(albumDto);
+		return Optional.of(this.albumMapper.entityToDto(this.albumRepository.save(album)));
 	}
 
-	public Optional<Album> readAlbum(int id) {
-		return albumRepository.findById(id);
+	public Optional<AlbumDto> readAlbum(int id) {
+		Album album = albumRepository.findById(id).get();
+		return Optional.of(this.albumMapper.entityToDto(album));
 	}
 
 	public boolean deleteAlbum(int id) {
@@ -36,9 +37,10 @@ public class AlbumService {
 		return false;
 	}
 
-	public Optional<Album> updateAlbum(int id, @Valid Album album) {
+	public Optional<AlbumDto> updateAlbum(int id, @Valid AlbumDto albumDto) {
 		if(albumRepository.existsById(id)) {
-			return Optional.of(albumRepository.save(album));
+			Album updated = albumRepository.save(this.albumMapper.dtoToEntity(albumDto));
+			return Optional.of(this.albumMapper.entityToDto(updated));
 		}
 		return null;
 	}

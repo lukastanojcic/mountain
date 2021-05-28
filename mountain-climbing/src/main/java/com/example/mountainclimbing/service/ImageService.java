@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.mountainclimbing.dto.ImageDto;
+import com.example.mountainclimbing.mapper.ImageMapper;
 import com.example.mountainclimbing.model.Image;
 import com.example.mountainclimbing.repository.ImageRepository;
 
@@ -24,12 +27,14 @@ public class ImageService {
 	private static final String BASE_URI = "C:/sviluppo/spool/saluber/test1/";
 	
 	private final ImageRepository imageRepository;
+	private final ImageMapper imageMapper;
 	
-	public ImageService(ImageRepository imageRepository) {
+	public ImageService(ImageRepository imageRepository, ImageMapper imageMapper) {
 		this.imageRepository = imageRepository;
+		this.imageMapper = imageMapper;
 	}
 
-	public Image createImage(Integer albumId, MultipartFile multipartFile) {
+	public Optional<ImageDto> createImage(Integer albumId, MultipartFile multipartFile) {
 		final Image image = new Image(null, multipartFile.getOriginalFilename(), multipartFile.getSize(), multipartFile.getContentType(), LocalDateTime.now(), albumId, null);
 		try(BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(Files.newOutputStream(Paths.get(BASE_URI + multipartFile.getOriginalFilename())))){
 			bufferedOutputStream.write(multipartFile.getBytes());
@@ -39,7 +44,7 @@ public class ImageService {
 			//handle exception and return something else
 			// TODO: handle exception
 		}
-		return 	imageRepository.save(image);
+		return Optional.of(this.imageMapper.entityToDto(imageRepository.save(image)));
 	}
 	
 	public Map<String, Object> readImage(Integer id) {
@@ -69,16 +74,16 @@ public class ImageService {
 		return data;
 	}
 	
-	public List<Image> findAll () {
-		final List<Image> LIST_IMAGES = StreamSupport.stream(this.imageRepository.findAll().spliterator(), false)
-			.map(new Function<Image, Image>() {
+	public List<ImageDto> findAll () {
+		final List<ImageDto> LIST_IMAGES = StreamSupport.stream(this.imageRepository.findAll().spliterator(), false)
+			.map(new Function<Image, ImageDto>() {
 
 				@Override
-				public Image apply(Image value) {
+				public ImageDto apply(Image value) {
 					// TODO Auto-generated method stub
 					byte [] bufferArray = getImageBytes(value.getName());
 					value.setBufferArray(bufferArray);
-					return value;
+					return imageMapper.entityToDto(value);
 				}
 			})
 			.collect(Collectors.toList());
@@ -86,9 +91,10 @@ public class ImageService {
 	}
 	
 	//rewrite update image method
-	public Optional<Image> updateImage(Integer id,Image image) {
+	public Optional<ImageDto> updateImage(Integer id, ImageDto imageDto) {
 		if(imageRepository.existsById(id)) {
-			return Optional.ofNullable(imageRepository.save(image));
+			Image update = this.imageMapper.dtoToEntity(imageDto); 
+			return Optional.ofNullable(this.imageMapper.entityToDto(imageRepository.save(update)));
 		}
 		return Optional.empty();
 	}

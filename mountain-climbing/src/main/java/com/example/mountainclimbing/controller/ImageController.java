@@ -1,10 +1,9 @@
 package com.example.mountainclimbing.controller;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -18,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.example.mountainclimbing.model.Image;
+import com.example.mountainclimbing.dto.ImageDto;
 import com.example.mountainclimbing.service.ImageService;
 
 @RestController
@@ -33,28 +31,25 @@ public class ImageController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Image>> findAll (){
-		final List<Image> DATA = this.imageService.findAll();
-		if(DATA.size() > 0) {
-			return ResponseEntity
-					.status(HttpStatus.OK)
-					.body(DATA);
+	public ResponseEntity<List<ImageDto>> findAll (){
+		final List<ImageDto> data = this.imageService.findAll();
+		if(data.size() > 0) {
+			return ResponseEntity.status(HttpStatus.OK).body(data);
 		}
 		else {
-			return ResponseEntity
-					.status(HttpStatus.NOT_FOUND)
-					.build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+					
 		}
 	}
 	
 	@PostMapping("/{albumId}")
-	public  ResponseEntity<Image> createImage(@PathVariable Integer albumId, @RequestParam("files") MultipartFile multipartFile) {		
-		Image data = imageService.createImage(albumId, multipartFile);
+	public  ResponseEntity<ImageDto> createImage(@PathVariable Integer albumId, @RequestParam("files") MultipartFile multipartFile) {		
+		Optional<ImageDto> data = imageService.createImage(albumId, multipartFile);
 		if(data != null) {
-			return new ResponseEntity<Image>(data,HttpStatus.CREATED);	
+			return new ResponseEntity<ImageDto>(data.get(),HttpStatus.CREATED);	
 		}
 		else {
-			return new ResponseEntity<Image>(HttpStatus.NO_CONTENT );
+			return new ResponseEntity<ImageDto>(HttpStatus.NO_CONTENT );
 		}
 	}
 	
@@ -69,15 +64,15 @@ public class ImageController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Image> updateImage(@PathVariable Integer id,@Valid @RequestBody Image image,BindingResult result){
-		Optional<Image> opt = imageService.updateImage(id, image);
+	public ResponseEntity<ImageDto> updateImage(@PathVariable Integer id,@Valid @RequestBody ImageDto imageDto,BindingResult result){
+		Optional<ImageDto> opt = imageService.updateImage(id, imageDto);
 		if(result.hasErrors()) {
-			return new ResponseEntity<Image>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<ImageDto>(HttpStatus.BAD_REQUEST);
 		}
 		if(opt.isPresent()) {
-			return new ResponseEntity<Image>(opt.get(),HttpStatus.OK);
+			return new ResponseEntity<ImageDto>(opt.get(),HttpStatus.OK);
 		}
-		return new ResponseEntity<Image>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<ImageDto>(HttpStatus.NOT_FOUND);
 		
 	}
 	
