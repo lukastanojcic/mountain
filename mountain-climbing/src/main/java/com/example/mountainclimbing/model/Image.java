@@ -12,7 +12,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
-@Table(value = "images")
+@Table(value = "image")
 @Getter
 @Setter
 @RequiredArgsConstructor

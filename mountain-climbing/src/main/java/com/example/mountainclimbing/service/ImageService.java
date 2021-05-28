@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -106,6 +108,21 @@ public class ImageService {
 			return true;
 		}
 		return false;
+	}
+
+	public List<ImageDto> getThreeRandomImages() {
+		List<ImageDto> all = findAll();
+		List<ImageDto> three = new ArrayList<ImageDto>();
+		Random rand = new Random();
+		int counter = 0;
+		while(counter < 3) {
+			ImageDto randomImage = all.get(rand.nextInt(all.size())); 
+			if(!three.contains(randomImage)) {
+				three.add(randomImage);
+				counter++;
+			}
+		}
+		return three;
 	}
 
 }
