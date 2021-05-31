@@ -2,11 +2,8 @@ package com.example.mountainclimbing.dto;
 
 import java.time.LocalDateTime;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
 public class ImageDto {
 
 	private Integer id;

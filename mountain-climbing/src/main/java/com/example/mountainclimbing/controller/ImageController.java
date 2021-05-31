@@ -89,7 +89,7 @@ public class ImageController {
 	@GetMapping("/three")
 	public ResponseEntity<List<ImageDto>> getThreeRandomImages(){
 		List<ImageDto> three = imageService.getThreeRandomImages();
-		if(three.size() == 3) {
+		if(three.size() > 0) {
 			return ResponseEntity.status(HttpStatus.OK).body(three);
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

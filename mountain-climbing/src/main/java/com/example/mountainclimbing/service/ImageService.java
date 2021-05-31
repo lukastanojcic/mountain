@@ -1,4 +1,5 @@
 package com.example.mountainclimbing.service;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -6,7 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.example.mountainclimbing.dto.ImageDto;
 import com.example.mountainclimbing.mapper.ImageMapper;
 import com.example.mountainclimbing.model.Image;
@@ -116,12 +115,16 @@ public class ImageService {
 		List<ImageDto> three = new ArrayList<ImageDto>();
 		Random rand = new Random();
 		int counter = 0;
-		while(counter < 3) {
-			ImageDto randomImage = all.get(rand.nextInt(all.size())); 
-			if(!three.contains(randomImage)) {
-				three.add(randomImage);
-				counter++;
+		if(all.size() >= 3) {
+			while(counter < 3) {
+				ImageDto randomImage = all.get(rand.nextInt(all.size())); 
+				if(!three.contains(randomImage)) {
+					three.add(randomImage);
+					counter++;
+				}
 			}
+		}else {
+			return all;
 		}
 		return three;
 	}
